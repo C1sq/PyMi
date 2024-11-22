@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>678</width>
-    <height>377</height>
+    <width>661</width>
+    <height>497</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -73,6 +73,28 @@ font-size: 16px;  /* Размер шрифта */</string>
    <property name="readOnly">
     <bool>true</bool>
    </property>
+  </widget>
+  <widget class="QWidget" name="buttonContainer" native="true">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>190</y>
+     <width>300</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout"/>
+  </widget>
+  <widget class="QWidget" name="buttonContainer_2" native="true">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>190</y>
+     <width>300</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2"/>
   </widget>
  </widget>
  <resources/>
