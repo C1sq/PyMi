@@ -135,32 +135,64 @@ class FirstUIWindow(QWidget, FirstWindowForm):
     def __init__(self, data_table):
         super(FirstUIWindow, self).__init__()
         self.setupUi(self)
-
+        self.fl = True
         self.data_table = data_table
-        print(f"Первое окно. Получено data_table: {self.data_table}")
 
         self.container_widget = self.findChild(QWidget, "buttonContainer")
         self.button_layout = self.container_widget.layout()
 
-        self.add_button("Button 1")
-        self.add_button("Button 2")
+        self.container_widget_2 = self.findChild(QWidget, "buttonContainer_2")
+        self.button_layout_2 = self.container_widget_2.layout()
 
-    def add_button(self, label):
+    def rang(self, data_table):
+        self.clear_buttons()
+        print('///////////')
+        print(self.data_table)
+        if len(data_table) == 2:
+            self.add_button(self.button_layout,'Стьюдент зав', 300, 30)
+            self.add_button(self.button_layout,'Стьюдент незав', 300, 30)
+            self.add_button(self.button_layout,'Манна-Уитни', 300, 30)
+            self.add_button(self.button_layout,'Стьюдент зав', 300, 30)
+            self.add_button(self.button_layout,'Вилкоксона', 300, 30)
+        if len(data_table) > 2:
+            self.add_button(self.button_layout,'Круаска Уолиса', 300, 30)
+            self.add_button(self.button_layout_2, 'Стьюдент зав', 300, 30)
+            self.add_button(self.button_layout_2, 'Стьюдент незав', 300, 30)
+            self.add_button(self.button_layout_2, 'Манна-Уитни', 300, 30)
+            self.add_button(self.button_layout_2, 'Стьюдент зав', 300, 30)
+            self.add_button(self.button_layout_2, 'Вилкоксона', 300, 30)
+
+
+    def add_button(self, button_layout,label, width=None, height=None):
         button = QPushButton(label)
-        self.button_layout.addWidget(button)
+
+        # Установка размеров кнопки, если указаны
+        if width and height:
+            button.setFixedSize(width, height)
+
+        # Добавляем кнопку в макет
+        button_layout.addWidget(button)
 
     def closeEvent(self, event):
         """Отправляет сигнал при закрытии окна."""
         self.closed.emit()
         super().closeEvent(event)
 
+    def clear_buttons(self):
+        # Перебираем все элементы в макете
+        while self.button_layout.count():
+            item = self.button_layout.takeAt(0)  # Удаляем элемент из макета
+            widget = item.widget()  # Получаем виджет, если он существует
+            if widget:
+                widget.deleteLater()
+
     def modify_data_table(self, data_table):
         text = f'Число дисперсий в ваших данных = {len(data_table)} \n\n  Вам подходят следующие критерии:'
         print(text)
         self.textEdit.setPlainText(text)  # Если это QTextEdit
-        min_width = len(f'Число дисперсий в ваших данных = {len(data_table)}') * 8
+        min_width = len(f'Число дисперсий в ваших данных = {len(data_table)}') * 10
         self.textEdit.setMinimumWidth(min_width)
-        print(data_table)
+        self.rang(data_table)
 
 
 class SecondUIWindow(QWidget, SecondWindowForm):
