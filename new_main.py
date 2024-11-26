@@ -184,6 +184,11 @@ class FirstUIWindow(QWidget, FirstWindowForm):
             widget = item.widget()  # Получаем виджет, если он существует
             if widget:
                 widget.deleteLater()
+        while self.button_layout_2.count():
+            item = self.button_layout_2.takeAt(0)  # Удаляем элемент из макета
+            widget = item.widget()  # Получаем виджет, если он существует
+            if widget:
+                widget.deleteLater()
 
     def modify_data_table(self, data_table):
         text = f'Число дисперсий в ваших данных = {len(data_table)} \n\n  Вам подходят следующие критерии:'
@@ -240,6 +245,11 @@ class SecondUIWindow(QWidget, SecondWindowForm):
         # Перебираем все элементы в макете
         while self.button_layout.count():
             item = self.button_layout.takeAt(0)  # Удаляем элемент из макета
+            widget = item.widget()  # Получаем виджет, если он существует
+            if widget:
+                widget.deleteLater()
+        while self.button_layout_2.count():
+            item = self.button_layout_2.takeAt(0)  # Удаляем элемент из макета
             widget = item.widget()  # Получаем виджет, если он существует
             if widget:
                 widget.deleteLater()
