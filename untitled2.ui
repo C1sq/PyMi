@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>661</width>
-    <height>497</height>
+    <height>516</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -95,6 +95,16 @@ font-size: 16px;  /* Размер шрифта */</string>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2"/>
+  </widget>
+  <widget class="QTextEdit" name="textEdit_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>400</y>
+     <width>621</width>
+     <height>101</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>
