@@ -1,9 +1,7 @@
+import openpyxl as xl
 from PyQt6 import uic
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QWidget, QVBoxLayout, \
-    QPushButton
-import openpyxl as xl
-import scipy as sc
+from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QWidget, QPushButton
 
 Form, _ = uic.loadUiType("untitled.ui")
 FirstWindowForm, _ = uic.loadUiType("untitled1.ui")
@@ -149,7 +147,9 @@ class FirstUIWindow(QWidget, FirstWindowForm):
     def rang(self, data_table):
         self.clear_buttons()
         print('///////////')
-        print(self.data_table)
+        print(data_table)
+        self.textEdit_2.clear()
+        self.pushButton.clicked.connect(lambda: self.settxt(self.calculate_overlap, data_table))
         if len(data_table) == 2:
             self.add_button(self.button_layout, 'Стьюдент зав', 300, 30, had.studen_zav, data_table)
             self.add_button(self.button_layout, 'Стьюдент незав', 300, 30, had.studen_nez, data_table)
@@ -167,6 +167,45 @@ class FirstUIWindow(QWidget, FirstWindowForm):
         self.textEdit_2.clear()
         self.textEdit_2.setStyleSheet("font-size: 16px;")
         self.textEdit_2.setPlainText(f'{func(data)}')
+
+    def calculate_overlap(self, data_lists):
+        """
+        Функция для вычисления процента одинаковых данных между разными списками (дисперсиями).
+
+        :param data_lists: Список списков данных, между которыми нужно найти пересечение.
+        :return: Процент одинаковых данных в разных списках, как для каждой пары, так и общий.
+        """
+        if not data_lists or len(data_lists) < 2:
+            raise ValueError("Необходимо передать как минимум два списка данных.")
+
+        # Преобразуем каждый список в множество для упрощения поиска пересечения
+        sets = [set(data) for data in data_lists]
+
+        # Рассчитаем процент пересечения для каждой пары
+        pair_overlap_percentages = []
+        for i in range(len(sets)):
+            for j in range(i + 1, len(sets)):
+                intersection = sets[i].intersection(sets[j])
+                total_elements = len(sets[i]) + len(sets[j])
+                intersection_count = len(intersection)
+                pair_overlap_percentage = (intersection_count / total_elements) * 100
+                pair_overlap_percentages.append(f'pair={i + 1}/{j + 1}: {int(pair_overlap_percentage)}%')
+
+        # Найдем пересечение всех множеств
+        intersection_all = set.intersection(*sets)
+
+        # Рассчитаем общий размер всех множеств
+        total_elements_all = sum(len(s) for s in sets)
+
+        # Рассчитаем общий процент пересечения
+        intersection_count_all = len(intersection_all)
+        overall_overlap_percentage = (intersection_count_all / total_elements_all) * 100
+
+        # Формируем результат
+        result = "\n".join(pair_overlap_percentages)
+        result += f"\nОбщий процент пересечения: {int(overall_overlap_percentage)}%"
+
+        return result
 
     def add_button(self, button_layout, label, width=None, height=None, action=None, data=None):
         print("Adding button:", label)
@@ -232,7 +271,9 @@ class SecondUIWindow(QWidget, SecondWindowForm):
     def rang(self, data_table):
         self.clear_buttons()
         print('///////////')
-        print(self.data_table)
+        print(data_table)
+        self.textEdit_3.clear()
+        self.pushButton.clicked.connect(lambda: self.settxt(self.calculate_overlap, data_table))
         if len(data_table) == 2:
             self.add_button(self.button_layout, 'Фишера', 300, 30, had.fisher_test, data_table)
             self.add_button(self.button_layout_2, 'Бартлета', 300, 30, had.bart, data_table)
@@ -246,6 +287,45 @@ class SecondUIWindow(QWidget, SecondWindowForm):
         self.textEdit_3.clear()
         self.textEdit_3.setStyleSheet("font-size: 16px;")
         self.textEdit_3.setPlainText(f'{func(data)}')
+
+    def calculate_overlap(self, data_lists):
+        """
+        Функция для вычисления процента одинаковых данных между разными списками (дисперсиями).
+
+        :param data_lists: Список списков данных, между которыми нужно найти пересечение.
+        :return: Процент одинаковых данных в разных списках, как для каждой пары, так и общий.
+        """
+        if not data_lists or len(data_lists) < 2:
+            raise ValueError("Необходимо передать как минимум два списка данных.")
+
+        # Преобразуем каждый список в множество для упрощения поиска пересечения
+        sets = [set(data) for data in data_lists]
+
+        # Рассчитаем процент пересечения для каждой пары
+        pair_overlap_percentages = []
+        for i in range(len(sets)):
+            for j in range(i + 1, len(sets)):
+                intersection = sets[i].intersection(sets[j])
+                total_elements = len(sets[i]) + len(sets[j])
+                intersection_count = len(intersection)
+                pair_overlap_percentage = (intersection_count / total_elements) * 100
+                pair_overlap_percentages.append(f'pair={i + 1}/{j + 1}: {int(pair_overlap_percentage)}%')
+
+        # Найдем пересечение всех множеств
+        intersection_all = set.intersection(*sets)
+
+        # Рассчитаем общий размер всех множеств
+        total_elements_all = sum(len(s) for s in sets)
+
+        # Рассчитаем общий процент пересечения
+        intersection_count_all = len(intersection_all)
+        overall_overlap_percentage = (intersection_count_all / total_elements_all) * 100
+
+        # Формируем результат
+        result = "\n".join(pair_overlap_percentages)
+        result += f"\nОбщий процент пересечения: {int(overall_overlap_percentage)}%"
+
+        return result
 
     def add_button(self, button_layout, label, width=None, height=None, action=None, data=None):
         print("Adding button:", label)
@@ -272,6 +352,7 @@ class SecondUIWindow(QWidget, SecondWindowForm):
         super().closeEvent(event)
 
     def clear_buttons(self):
+
         # Перебираем все элементы в макете
         while self.button_layout.count():
             item = self.button_layout.takeAt(0)  # Удаляем элемент из макета
@@ -299,29 +380,109 @@ class Heandler:
         self.stats = stats
 
     def studen_nez(self, data):
+        """
+        Выполняет t-тест для независимых выборок для всех возможных пар, если передано больше двух групп.
+        """
         try:
-            return self.stats.ttest_ind(*data)
+            from itertools import combinations
+            from scipy.stats import ttest_ind
+
+            results = []
+
+            # Если передано больше двух групп, вычисляем для всех пар
+            if len(data) > 2:
+                for (i, data1), (j, data2) in combinations(enumerate(data), 2):
+                    stat, p_value = ttest_ind(data1, data2)
+                    results.append(f'(pair={i + 1} и {j + 1}, statistic={stat:.4f}, p_value={p_value:.4f})\n')
+            else:
+                # Обработка случая только для двух групп
+                data1, data2 = data[0], data[1]
+                stat, p_value = ttest_ind(data1, data2)
+                results.append(f'(pair=1 и 2, statistic={stat:.4f}, p_value={p_value:.4f})\n')
+
+            return "".join(results)
+
         except Exception as e:
             QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении t-теста для независимых выборок: {e}")
             return None
 
     def studen_zav(self, data):
+        """
+        Выполняет t-тест для зависимых выборок для всех возможных пар, если передано больше двух групп.
+        """
         try:
-            return self.stats.ttest_rel(*data)
+            from itertools import combinations
+            from scipy.stats import ttest_rel
+
+            results = []
+
+            # Если передано больше двух групп, вычисляем для всех пар
+            if len(data) > 2:
+                for (i, data1), (j, data2) in combinations(enumerate(data), 2):
+                    stat, p_value = ttest_rel(data1, data2)
+                    results.append(f'(pair={i + 1} и {j + 1}, statistic={stat:.4f}, p_value={p_value:.4f})\n')
+            else:
+                # Обработка случая только для двух групп
+                data1, data2 = data[0], data[1]
+                stat, p_value = ttest_rel(data1, data2)
+                results.append(f'(pair=1 и 2, statistic={stat:.4f}, p_value={p_value:.4f})\n')
+
+            return "".join(results)
+
         except Exception as e:
             QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении t-теста для зависимых выборок: {e}")
             return None
 
     def mana_ui(self, data):
+        """
+        Выполняет тест Манна-Уитни для всех возможных пар, если передано больше двух групп.
+        """
         try:
-            return self.stats.mannwhitneyu(*data)
+            from itertools import combinations
+            from scipy.stats import mannwhitneyu
+
+            results = []
+
+            # Если передано больше двух групп, вычисляем для всех пар
+            if len(data) > 2:
+                for (i, data1), (j, data2) in combinations(enumerate(data), 2):
+                    stat, p_value = mannwhitneyu(data1, data2)
+                    results.append(f'(pair={i + 1} и {j + 1}, statistic={stat:.4f}, p_value={p_value:.4f})\n')
+            else:
+                # Обработка случая только для двух групп
+                data1, data2 = data[0], data[1]
+                stat, p_value = mannwhitneyu(data1, data2)
+                results.append(f'(pair=1 и 2, statistic={stat:.4f}, p_value={p_value:.4f})\n')
+
+            return "".join(results)
+
         except Exception as e:
             QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении теста Манна-Уитни: {e}")
             return None
 
     def wilk(self, data):
+        """
+        Выполняет тест Уилкоксона для всех возможных пар, если передано больше двух групп.
+        """
         try:
-            return self.stats.wilcoxon(*data)
+            from itertools import combinations
+            from scipy.stats import wilcoxon
+
+            results = []
+
+            # Если передано больше двух групп, вычисляем для всех пар
+            if len(data) > 2:
+                for (i, data1), (j, data2) in combinations(enumerate(data), 2):
+                    stat, p_value = wilcoxon(data1, data2)
+                    results.append(f'(pair={i + 1} и {j + 1}, statistic={stat:.4f}, p_value={p_value:.4f})\n')
+            else:
+                # Обработка случая только для двух групп
+                data1, data2 = data[0], data[1]
+                stat, p_value = wilcoxon(data1, data2)
+                results.append(f'(pair=1 и 2, statistic={stat:.4f}, p_value={p_value:.4f})\n')
+
+            return "".join(results)
+
         except Exception as e:
             QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении теста Уилкоксона: {e}")
             return None
@@ -333,18 +494,52 @@ class Heandler:
             QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении теста Крускала-Уоллиса: {e}")
             return None
 
-    def fisher_test(self, data, alternative='two-sided'):
+    def fisher_test(self, data):
         try:
-            # Проверяем, что входные данные имеют размер 2x2
-            if len(data) != 2 or len(data[0]) != 2 or len(data[1]) != 2:
-                QMessageBox.warning(None, "Ошибка данных", "Данные должны быть в формате таблицы 2x2.")
-                return None
+            import numpy as np
+            from scipy.stats import f
+            from itertools import combinations
 
-            odds_ratio, p_value = self.stats.fisher_exact(data, alternative=alternative)
-            return f'Отношение шансов (Odds Ratio): {odds_ratio}, P-значение: {p_value}'
+            results = []
+
+            # Если передано больше двух выборок, вычисляем для всех пар
+            if len(data) > 2:
+                for (i, data1), (j, data2) in combinations(enumerate(data), 2):
+                    # Вычисляем дисперсии для двух выборок
+                    var1 = np.var(data1, ddof=1)  # Используем ddof=1 для корректной оценки выборочной дисперсии
+                    var2 = np.var(data2, ddof=1)
+
+                    n1 = len(data1)
+                    n2 = len(data2)
+                    df1 = n1 - 1
+                    df2 = n2 - 1
+
+                    # Вычисляем F-статистику
+                    F_statistic = var1 / var2 if var1 > var2 else var2 / var1
+                    # Определяем p-значение
+                    p_value = 1 - f.cdf(F_statistic, df1, df2)
+
+                    results.append(f'(pair={i + 1} и {j + 1}, statistic={F_statistic:.4f}, p_value={p_value:.4f})\n')
+            else:
+                # Обработка случая только для двух выборок
+                data1, data2 = data[0], data[1]
+                var1 = np.var(data1, ddof=1)
+                var2 = np.var(data2, ddof=1)
+
+                n1 = len(data1)
+                n2 = len(data2)
+                df1 = n1 - 1
+                df2 = n2 - 1
+
+                F_statistic = var1 / var2 if var1 > var2 else var2 / var1
+                p_value = 1 - f.cdf(F_statistic, df1, df2)
+
+                results.append(f'(pair=1 и 2, statistic={F_statistic:.4f}, p_value={p_value:.4f})\n')
+
+            return "".join(results)
+
         except Exception as e:
-            QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении точного теста Фишера: {e}")
-            return None
+            return str(e)
 
     def bart(self, data):
         try:
@@ -370,5 +565,3 @@ if __name__ == '__main__':
     w = Ui(had)
     w.show()
     sys.exit(app.exec())
-
-    print(had.studen_nez([[12, 12, 12, 1, 21, 2, 1], [23432, 654, 6546, 5235432, 24, 235, 2354]]))
