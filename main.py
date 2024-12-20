@@ -3,9 +3,9 @@ from PyQt6 import uic
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QWidget, QPushButton
 
-Form, _ = uic.loadUiType("untitled.ui")
-FirstWindowForm, _ = uic.loadUiType("untitled1.ui")
-SecondWindowForm, _ = uic.loadUiType("untitled2.ui")
+Form, _ = uic.loadUiType("web_ui/untitled.ui")
+FirstWindowForm, _ = uic.loadUiType("web_ui/untitled1.ui")
+SecondWindowForm, _ = uic.loadUiType("web_ui/untitled2.ui")
 
 
 class Ui(QMainWindow, Form):
