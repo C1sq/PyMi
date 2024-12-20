@@ -1,9 +1,7 @@
+import openpyxl as xl
 from PyQt6 import uic
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QWidget, QVBoxLayout, \
-    QPushButton
-import openpyxl as xl
-import scipy as sc
+from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QWidget, QPushButton
 
 Form, _ = uic.loadUiType("untitled.ui")
 FirstWindowForm, _ = uic.loadUiType("untitled1.ui")
@@ -140,11 +138,17 @@ class FirstUIWindow(QWidget, FirstWindowForm):
         self.fl = True
         self.data_table = data_table
 
-        self.container_widget = self.findChild(QWidget, "buttonContainer")
-        self.button_layout = self.container_widget.layout()
+        self.container_widget_11 = self.findChild(QWidget, "buttonContainer_11")
+        self.button_layout_11 = self.container_widget_11.layout()
 
-        self.container_widget_2 = self.findChild(QWidget, "buttonContainer_2")
-        self.button_layout_2 = self.container_widget_2.layout()
+        self.container_widget_12 = self.findChild(QWidget, "buttonContainer_12")
+        self.button_layout_12 = self.container_widget_12.layout()
+
+        self.container_widget_21 = self.findChild(QWidget, "buttonContainer_21")
+        self.button_layout_21 = self.container_widget_21.layout()
+
+        self.container_widget_22 = self.findChild(QWidget, "buttonContainer_22")
+        self.button_layout_22 = self.container_widget_22.layout()
 
     def rang(self, data_table):
         self.clear_buttons()
@@ -153,17 +157,17 @@ class FirstUIWindow(QWidget, FirstWindowForm):
         self.textEdit_2.clear()
         self.pushButton.clicked.connect(lambda: self.settxt(self.calculate_overlap, data_table))
         if len(data_table) == 2:
-            self.add_button(self.button_layout, 'Стьюдент зав', 300, 30, had.studen_zav, data_table)
-            self.add_button(self.button_layout, 'Стьюдент незав', 300, 30, had.studen_nez, data_table)
-            self.add_button(self.button_layout, 'Манна-Уитни', 300, 30, had.mana_ui, data_table)
-            self.add_button(self.button_layout, 'Вилкоксона', 300, 30, had.wilk, data_table)
-            self.add_button(self.button_layout_2, 'Круаска Уолиса', 300, 30, had.kru, data_table)
+            self.add_button(self.button_layout_11, 'Стьюдент зав', 185, 30, had.studen_zav, data_table)
+            self.add_button(self.button_layout_12, 'Стьюдент незав', 185, 30, had.studen_nez, data_table)
+            self.add_button(self.button_layout_12, 'Манна-Уитни', 185, 30, had.mana_ui, data_table)
+            self.add_button(self.button_layout_11, 'Вилкоксона', 185, 30, had.wilk, data_table)
+            self.add_button(self.button_layout_22, 'Круаска Уолиса', 185, 30, had.kru, data_table)
         if len(data_table) > 2:
-            self.add_button(self.button_layout, 'Круаска Уолиса', 300, 30, had.kru, data_table)
-            self.add_button(self.button_layout_2, 'Стьюдент зав', 300, 30, had.studen_zav, data_table)
-            self.add_button(self.button_layout_2, 'Стьюдент незав', 300, 30, had.studen_nez, data_table)
-            self.add_button(self.button_layout_2, 'Манна-Уитни', 300, 30, had.mana_ui, data_table)
-            self.add_button(self.button_layout_2, 'Вилкоксона', 300, 30, had.wilk, data_table)
+            self.add_button(self.button_layout_12, 'Круаска Уолиса', 185, 30, had.kru, data_table)
+            self.add_button(self.button_layout_21, 'Стьюдент зав', 185, 30, had.studen_zav, data_table)
+            self.add_button(self.button_layout_22, 'Стьюдент незав', 185, 30, had.studen_nez, data_table)
+            self.add_button(self.button_layout_22, 'Манна-Уитни', 185, 30, had.mana_ui, data_table)
+            self.add_button(self.button_layout_21, 'Вилкоксона', 185, 30, had.wilk, data_table)
 
     def settxt(self, func, data):
         self.textEdit_2.clear()
@@ -175,7 +179,7 @@ class FirstUIWindow(QWidget, FirstWindowForm):
         Функция для вычисления процента одинаковых данных между разными списками (дисперсиями).
 
         :param data_lists: Список списков данных, между которыми нужно найти пересечение.
-        :return: Процент одинаковых данных в разных списках.
+        :return: Процент одинаковых данных в разных списках, как для каждой пары, так и общий.
         """
         if not data_lists or len(data_lists) < 2:
             raise ValueError("Необходимо передать как минимум два списка данных.")
@@ -183,17 +187,31 @@ class FirstUIWindow(QWidget, FirstWindowForm):
         # Преобразуем каждый список в множество для упрощения поиска пересечения
         sets = [set(data) for data in data_lists]
 
+        # Рассчитаем процент пересечения для каждой пары
+        pair_overlap_percentages = []
+        for i in range(len(sets)):
+            for j in range(i + 1, len(sets)):
+                intersection = sets[i].intersection(sets[j])
+                total_elements = len(sets[i]) + len(sets[j])
+                intersection_count = len(intersection)
+                pair_overlap_percentage = (intersection_count / total_elements) * 100
+                pair_overlap_percentages.append(f'pair={i + 1}/{j + 1}: {int(pair_overlap_percentage)}%')
+
         # Найдем пересечение всех множеств
-        intersection = set.intersection(*sets)
+        intersection_all = set.intersection(*sets)
 
         # Рассчитаем общий размер всех множеств
-        total_elements = sum(len(s) for s in sets)
+        total_elements_all = sum(len(s) for s in sets)
 
-        # Рассчитаем процент пересечения
-        intersection_count = len(intersection)
-        overlap_percentage = (intersection_count / total_elements) * 100
+        # Рассчитаем общий процент пересечения
+        intersection_count_all = len(intersection_all)
+        overall_overlap_percentage = (intersection_count_all / total_elements_all) * 100
 
-        return f'{int(overlap_percentage)}%'
+        # Формируем результат
+        result = "\n".join(pair_overlap_percentages)
+        result += f"\nОбщий процент пересечения: {int(overall_overlap_percentage)}%"
+
+        return result
 
     def add_button(self, button_layout, label, width=None, height=None, action=None, data=None):
         print("Adding button:", label)
@@ -221,13 +239,23 @@ class FirstUIWindow(QWidget, FirstWindowForm):
 
     def clear_buttons(self):
         # Перебираем все элементы в макете
-        while self.button_layout.count():
-            item = self.button_layout.takeAt(0)  # Удаляем элемент из макета
+        while self.button_layout_11.count():
+            item = self.button_layout_11.takeAt(0)  # Удаляем элемент из макета
             widget = item.widget()  # Получаем виджет, если он существует
             if widget:
                 widget.deleteLater()
-        while self.button_layout_2.count():
-            item = self.button_layout_2.takeAt(0)  # Удаляем элемент из макета
+        while self.button_layout_12.count():
+            item = self.button_layout_12.takeAt(0)  # Удаляем элемент из макета
+            widget = item.widget()  # Получаем виджет, если он существует
+            if widget:
+                widget.deleteLater()
+        while self.button_layout_21.count():
+            item = self.button_layout_21.takeAt(0)  # Удаляем элемент из макета
+            widget = item.widget()  # Получаем виджет, если он существует
+            if widget:
+                widget.deleteLater()
+        while self.button_layout_22.count():
+            item = self.button_layout_22.takeAt(0)  # Удаляем элемент из макета
             widget = item.widget()  # Получаем виджет, если он существует
             if widget:
                 widget.deleteLater()
@@ -250,11 +278,17 @@ class SecondUIWindow(QWidget, SecondWindowForm):
         self.fl = True
         self.data_table = data_table
 
-        self.container_widget = self.findChild(QWidget, "buttonContainer")
-        self.button_layout = self.container_widget.layout()
+        self.container_widget_11 = self.findChild(QWidget, "buttonContainer_11")
+        self.button_layout_11 = self.container_widget_11.layout()
 
-        self.container_widget_2 = self.findChild(QWidget, "buttonContainer_2")
-        self.button_layout_2 = self.container_widget_2.layout()
+        self.container_widget_12 = self.findChild(QWidget, "buttonContainer_12")
+        self.button_layout_12 = self.container_widget_12.layout()
+
+        self.container_widget_21 = self.findChild(QWidget, "buttonContainer_21")
+        self.button_layout_21 = self.container_widget_21.layout()
+
+        self.container_widget_22 = self.findChild(QWidget, "buttonContainer_22")
+        self.button_layout_22 = self.container_widget_22.layout()
 
     def rang(self, data_table):
         self.clear_buttons()
@@ -263,13 +297,13 @@ class SecondUIWindow(QWidget, SecondWindowForm):
         self.textEdit_3.clear()
         self.pushButton.clicked.connect(lambda: self.settxt(self.calculate_overlap, data_table))
         if len(data_table) == 2:
-            self.add_button(self.button_layout, 'Фишера', 300, 30, had.fisher_test, data_table)
-            self.add_button(self.button_layout_2, 'Бартлета', 300, 30, had.bart, data_table)
-            self.add_button(self.button_layout_2, 'Левене', 300, 30, had.leve, data_table)
+            self.add_button(self.button_layout_12, 'Фишера', 185, 30, had.fisher_test, data_table)
+            self.add_button(self.button_layout_22, 'Бартлета', 185, 30, had.bart, data_table)
+            self.add_button(self.button_layout_22, 'Левене', 185, 30, had.leve, data_table)
         if len(data_table) > 2:
-            self.add_button(self.button_layout, 'Бартлета', 300, 30, had.bart, data_table)
-            self.add_button(self.button_layout, 'Левене', 300, 30, had.leve, data_table)
-            self.add_button(self.button_layout_2, 'Фишера', 300, 30, had.fisher_test, data_table)
+            self.add_button(self.button_layout_12, 'Бартлета', 185, 30, had.bart, data_table)
+            self.add_button(self.button_layout_12, 'Левене', 185, 30, had.leve, data_table)
+            self.add_button(self.button_layout_22, 'Фишера', 185, 30, had.fisher_test, data_table)
 
     def settxt(self, func, data):
         self.textEdit_3.clear()
@@ -281,7 +315,7 @@ class SecondUIWindow(QWidget, SecondWindowForm):
         Функция для вычисления процента одинаковых данных между разными списками (дисперсиями).
 
         :param data_lists: Список списков данных, между которыми нужно найти пересечение.
-        :return: Процент одинаковых данных в разных списках.
+        :return: Процент одинаковых данных в разных списках, как для каждой пары, так и общий.
         """
         if not data_lists or len(data_lists) < 2:
             raise ValueError("Необходимо передать как минимум два списка данных.")
@@ -289,17 +323,31 @@ class SecondUIWindow(QWidget, SecondWindowForm):
         # Преобразуем каждый список в множество для упрощения поиска пересечения
         sets = [set(data) for data in data_lists]
 
+        # Рассчитаем процент пересечения для каждой пары
+        pair_overlap_percentages = []
+        for i in range(len(sets)):
+            for j in range(i + 1, len(sets)):
+                intersection = sets[i].intersection(sets[j])
+                total_elements = len(sets[i]) + len(sets[j])
+                intersection_count = len(intersection)
+                pair_overlap_percentage = (intersection_count / total_elements) * 100
+                pair_overlap_percentages.append(f'pair={i + 1}/{j + 1}: {int(pair_overlap_percentage)}%')
+
         # Найдем пересечение всех множеств
-        intersection = set.intersection(*sets)
+        intersection_all = set.intersection(*sets)
 
         # Рассчитаем общий размер всех множеств
-        total_elements = sum(len(s) for s in sets)
+        total_elements_all = sum(len(s) for s in sets)
 
-        # Рассчитаем процент пересечения
-        intersection_count = len(intersection)
-        overlap_percentage = (intersection_count / total_elements) * 100
+        # Рассчитаем общий процент пересечения
+        intersection_count_all = len(intersection_all)
+        overall_overlap_percentage = (intersection_count_all / total_elements_all) * 100
 
-        return f'{int(overlap_percentage)}%'
+        # Формируем результат
+        result = "\n".join(pair_overlap_percentages)
+        result += f"\nОбщий процент пересечения: {int(overall_overlap_percentage)}%"
+
+        return result
 
     def add_button(self, button_layout, label, width=None, height=None, action=None, data=None):
         print("Adding button:", label)
@@ -328,13 +376,23 @@ class SecondUIWindow(QWidget, SecondWindowForm):
     def clear_buttons(self):
 
         # Перебираем все элементы в макете
-        while self.button_layout.count():
-            item = self.button_layout.takeAt(0)  # Удаляем элемент из макета
+        while self.button_layout_11.count():
+            item = self.button_layout_11.takeAt(0)  # Удаляем элемент из макета
             widget = item.widget()  # Получаем виджет, если он существует
             if widget:
                 widget.deleteLater()
-        while self.button_layout_2.count():
-            item = self.button_layout_2.takeAt(0)  # Удаляем элемент из макета
+        while self.button_layout_12.count():
+            item = self.button_layout_12.takeAt(0)  # Удаляем элемент из макета
+            widget = item.widget()  # Получаем виджет, если он существует
+            if widget:
+                widget.deleteLater()
+        while self.button_layout_21.count():
+            item = self.button_layout_21.takeAt(0)  # Удаляем элемент из макета
+            widget = item.widget()  # Получаем виджет, если он существует
+            if widget:
+                widget.deleteLater()
+        while self.button_layout_22.count():
+            item = self.button_layout_22.takeAt(0)  # Удаляем элемент из макета
             widget = item.widget()  # Получаем виджет, если он существует
             if widget:
                 widget.deleteLater()
@@ -354,66 +412,234 @@ class Heandler:
         self.stats = stats
 
     def studen_nez(self, data):
+        """
+        Выполняет t-тест для независимых выборок (двусторонний и односторонний) для всех возможных пар,
+        если передано больше двух групп.
+        """
         try:
-            return self.stats.ttest_ind(*data)
+            from itertools import combinations
+            from scipy.stats import ttest_ind
+
+            results = []
+            results.append(f'Тест Стьюдента для независимых\n')
+            # Если передано больше двух групп, вычисляем для всех пар
+            if len(data) > 2:
+                for (i, data1), (j, data2) in combinations(enumerate(data), 2):
+                    # Двусторонний тест
+                    stat, p_value_two_sided = ttest_ind(data1, data2, alternative='two-sided')
+
+                    # Односторонние тесты
+                    _, p_value_greater = ttest_ind(data1, data2, alternative='greater')
+                    _, p_value_less = ttest_ind(data1, data2, alternative='less')
+
+                    results.append(
+                        f'Пара {i + 1} и {j + 1}:\n'
+                        f'Статистика: {stat}\n'
+                        f'p-значение (двустороннее): {p_value_two_sided}\n'
+                        f'p-значение (одностороннее, больше): {p_value_greater}\n'
+                        f'p-значение (одностороннее, меньше): {p_value_less}\n'
+                    )
+            else:
+                # Обработка случая только для двух групп
+                data1, data2 = data[0], data[1]
+
+                # Двусторонний тест
+                stat, p_value_two_sided = ttest_ind(data1, data2, alternative='two-sided')
+
+                # Односторонние тесты
+                _, p_value_greater = ttest_ind(data1, data2, alternative='greater')
+                _, p_value_less = ttest_ind(data1, data2, alternative='less')
+
+                results.append(
+                    f'Статистика: {stat}\n'
+                    f'p-значение (двустороннее): {p_value_two_sided}\n'
+                    f'p-значение (одностороннее, больше): {p_value_greater}\n'
+                    f'p-значение (одностороннее, меньше): {p_value_less}\n'
+                )
+
+            return "".join(results)
+
         except Exception as e:
             QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении t-теста для независимых выборок: {e}")
             return None
 
+
     def studen_zav(self, data):
+        """
+        Выполняет t-тест для зависимых выборок для всех возможных пар, если передано больше двух групп.
+        """
         try:
-            return self.stats.ttest_rel(*data)
+            from itertools import combinations
+            from scipy.stats import ttest_rel
+
+            results = []
+            results.append(f'Тест Стьюдента для зависимых\n')
+            if len(data) > 2:
+                for (i, data1), (j, data2) in combinations(enumerate(data), 2):
+                    stat, p_value = ttest_rel(data1, data2)
+                    results.append(
+                        f'Пара {i + 1} и {j + 1}:\n'
+                        f'Статистика: {stat}\n'
+                        f'p-значение: {p_value}\n'
+                    )
+            else:
+                data1, data2 = data[0], data[1]
+                stat, p_value = ttest_rel(data1, data2)
+                results.append(
+                    f'Статистика: {stat}\n'
+                    f'p-значение: {p_value}\n'
+                )
+
+            return "".join(results)
+
         except Exception as e:
-            QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении t-теста для зависимых выборок: {e}")
-            return None
+            return f"Ошибка при выполнении t-теста для зависимых выборок: {e}"
 
     def mana_ui(self, data):
+        """
+        Выполняет тест Манна-Уитни для всех возможных пар, если передано больше двух групп.
+        """
         try:
-            return self.stats.mannwhitneyu(*data)
+            from itertools import combinations
+            from scipy.stats import mannwhitneyu
+
+            results = []
+            results.append(f'Тест Манна-Уитни\n')
+            if len(data) > 2:
+                for (i, data1), (j, data2) in combinations(enumerate(data), 2):
+                    stat, p_value = mannwhitneyu(data1, data2)
+                    results.append(
+                        f'Пара {i + 1} и {j + 1}:\n'
+                        f'Статистика: {stat}\n'
+                        f'p-значение: {p_value}\n'
+                    )
+            else:
+                data1, data2 = data[0], data[1]
+                stat, p_value = mannwhitneyu(data1, data2)
+                results.append(
+                    f'Статистика: {stat}\n'
+                    f'p-значение: {p_value}\n'
+                )
+
+            return "".join(results)
+
         except Exception as e:
-            QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении теста Манна-Уитни: {e}")
-            return None
+            return f"Ошибка при выполнении теста Манна-Уитни: {e}"
 
     def wilk(self, data):
+        """
+        Выполняет тест Уилкоксона для всех возможных пар, если передано больше двух групп.
+        """
         try:
-            return self.stats.wilcoxon(*data)
+            from itertools import combinations
+            from scipy.stats import wilcoxon
+
+            results = []
+            results.append(f'Тест Уилкоксона\n')
+            if len(data) > 2:
+                for (i, data1), (j, data2) in combinations(enumerate(data), 2):
+                    stat, p_value = wilcoxon(data1, data2)
+                    results.append(
+                        f'Пара {i + 1} и {j + 1}:\n'
+                        f'Статистика: {stat}\n'
+                        f'p-значение: {p_value}\n'
+                    )
+            else:
+                data1, data2 = data[0], data[1]
+                stat, p_value = wilcoxon(data1, data2)
+                results.append(
+                    f'Статистика: {stat}\n'
+                    f'p-значение: {p_value}\n'
+                )
+
+            return "".join(results)
+
         except Exception as e:
-            QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении теста Уилкоксона: {e}")
-            return None
+            return f"Ошибка при выполнении теста Уилкоксона: {e}"
 
     def kru(self, data):
+        """
+        Выполняет тест Крускала-Уоллиса.
+        """
         try:
-            return self.stats.kruskal(*data)
+            stat, p_value = self.stats.kruskal(*data)
+            return (
+                f'Тест Крускала-Уоллиса\n'
+                f'Статистика: {stat}\n'
+                f'p-значение: {p_value}\n'
+            )
         except Exception as e:
-            QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении теста Крускала-Уоллиса: {e}")
-            return None
+            return f"Ошибка при выполнении теста Крускала-Уоллиса: {e}"
 
-    def fisher_test(self, data, alternative='two-sided'):
+    def fisher_test(self, data):
+        """
+        Выполняет F-тест для всех возможных пар, если передано больше двух выборок.
+        """
         try:
-            # Проверяем, что входные данные имеют размер 2x2
-            if len(data) != 2 or len(data[0]) != 2 or len(data[1]) != 2:
-                QMessageBox.warning(None, "Ошибка данных", "Данные должны быть в формате таблицы 2x2.")
-                return None
+            import numpy as np
+            from scipy.stats import f
+            from itertools import combinations
 
-            odds_ratio, p_value = self.stats.fisher_exact(data, alternative=alternative)
-            return f'Отношение шансов (Odds Ratio): {odds_ratio}, P-значение: {p_value}'
+            results = []
+            results.append(f'Тест Фишера\n')
+            if len(data) > 2:
+                for (i, data1), (j, data2) in combinations(enumerate(data), 2):
+                    var1 = np.var(data1, ddof=1)
+                    var2 = np.var(data2, ddof=1)
+                    F_statistic = var1 / var2 if var1 > var2 else var2 / var1
+                    p_value = 1 - f.cdf(F_statistic, len(data1) - 1, len(data2) - 1)
+
+                    results.append(
+                        f'Пара {i + 1} и {j + 1}:\n'
+                        f'F-статистика: {F_statistic}\n'
+                        f'p-значение: {p_value}\n'
+                    )
+            else:
+                data1, data2 = data[0], data[1]
+                var1 = np.var(data1, ddof=1)
+                var2 = np.var(data2, ddof=1)
+                F_statistic = var1 / var2 if var1 > var2 else var2 / var1
+                p_value = 1 - f.cdf(F_statistic, len(data1) - 1, len(data2) - 1)
+
+                results.append(
+                    f'F-статистика: {F_statistic}\n'
+                    f'p-значение: {p_value}\n'
+                )
+
+            return "".join(results)
+
         except Exception as e:
-            QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении точного теста Фишера: {e}")
-            return None
+            return f"Ошибка при выполнении F-теста: {e}"
 
     def bart(self, data):
+        """
+        Выполняет тест Бартлетта.
+        """
         try:
-            return self.stats.bartlett(*data)
+            stat, p_value = self.stats.bartlett(*data)
+            return (
+                f'Тест Бартлетта\n'
+                f'Статистика: {stat}\n'
+                f'p-значение: {p_value}\n'
+            )
         except Exception as e:
-            QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении теста Бартлетта: {e}")
-            return None
+            return f"Ошибка при выполнении теста Бартлетта: {e}"
 
     def leve(self, data):
+        """
+        Выполняет тест Левена.
+        """
         try:
-            return self.stats.levene(*data)
+            stat, p_value = self.stats.levene(*data)
+            return (
+                f'Тест Левена\n'
+                f'Статистика: {stat}\n'
+                f'p-значение: {p_value}\n'
+            )
         except Exception as e:
-            QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении теста Левена: {e}")
-            return None
+            return f"Ошибка при выполнении теста Левена: {e}"
+
+
 
 
 if __name__ == '__main__':
