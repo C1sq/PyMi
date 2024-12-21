@@ -16,7 +16,7 @@
 1. Убедитесь, что установлен Python 3.9 или выше.
 2. Установите зависимости с помощью команды:
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirements.txt --no-cache-dir
    ```
 3. Запустите приложение с помощью команды:
    ```bash
