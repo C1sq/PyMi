@@ -1,3 +1,4 @@
 scipy
 openpyxl
 PyQt6
+PyQt5
