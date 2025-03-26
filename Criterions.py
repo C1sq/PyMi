@@ -1,5 +1,5 @@
-from scipy import stats
 from PyQt5.QtWidgets import QMessageBox
+
 
 class Heandler:
     def __init__(self):
@@ -57,7 +57,6 @@ class Heandler:
         except Exception as e:
             QMessageBox.critical(None, "Ошибка", f"Ошибка при выполнении t-теста для независимых выборок: {e}")
             return None
-
 
     def studen_zav(self, data):
         """
@@ -235,5 +234,6 @@ class Heandler:
             return f"Ошибка при выполнении теста Левена: {e}"
 
 
-had = Heandler()
-print(had.fisher_test([[12, 12, 12, 1, 21, 2, 1], [23432, 654, 6546, 5235432, 24, 235, 2354]]))
+if __name__ == '__main__':
+    had = Heandler()
+    print(had.fisher_test([[12, 12, 12, 1, 21, 2, 1], [23432, 654, 6546, 5235432, 24, 235, 2354]]))
