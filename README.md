@@ -6,7 +6,7 @@
 ### Основные файлы
 - **[main.exe](https://github.com/C1sq/PyMi/tree/master/dist/main.exe)**: Исполняемый файл программы
 - **[main.py](https://github.com/C1sq/PyMi/tree/master/main.py)**: основной файл программы, содержащий логику выполнения анализа данных.
-- **[untitled.ui](https://github.com/C1sq/PyMi/tree/master/untitled.ui)**, **[untitled1.ui](https://github.com/C1sq/PyMi/tree/master/untitled1.ui)**, **[untitled2.ui](https://github.com/C1sq/PyMi/tree/master/untitled2.ui)**: файлы графического интерфейса, реализованные в формате Qt Designer. Они предоставляют элементы управления и визуализации.
+- **[untitled.ui](https://github.com/C1sq/PyMi/tree/master/web_ui/untitled.ui)**, **[untitled1.ui](https://github.com/C1sq/PyMi/tree/master/web_ui/untitled1.ui)**, **[untitled2.ui](https://github.com/C1sq/PyMi/tree/master/web_ui/untitled2.ui)**: файлы графического интерфейса, реализованные в формате Qt Designer. Они предоставляют элементы управления и визуализации.
 
 ### Основные возможности
 - Импорт данных для анализа.
