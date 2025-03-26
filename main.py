@@ -2,10 +2,19 @@ import openpyxl as xl
 from PyQt6 import uic
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTableWidgetItem, QWidget, QPushButton
+import sys
+import os
 
-Form, _ = uic.loadUiType("web_ui/untitled.ui")
-FirstWindowForm, _ = uic.loadUiType("web_ui/untitled1.ui")
-SecondWindowForm, _ = uic.loadUiType("web_ui/untitled2.ui")
+# Определим базовый путь в зависимости от того, запущен ли файл как .exe или нет
+if getattr(sys, 'frozen', False):
+    # Если приложение собрано (frozen), используем специальный путь
+    base_path = sys._MEIPASS
+else:
+    # Если приложение запущено в режиме разработки, используем текущую директорию
+    base_path = os.path.abspath(".")
+Form, _ = uic.loadUiType(os.path.join(base_path, "web_ui", "untitled.ui"))
+FirstWindowForm, _ = uic.loadUiType(os.path.join(base_path, "web_ui", "untitled1.ui"))
+SecondWindowForm, _ = uic.loadUiType(os.path.join(base_path, "web_ui", "untitled2.ui"))
 
 
 class Ui(QMainWindow, Form):
