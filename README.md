@@ -4,8 +4,9 @@
 Программа для математического анализа данных предоставляет функционал для работы с графическим интерфейсом и позволяет пользователю применять различные критерии для анализа дисперсий.
 
 ### Основные файлы
-- **main.py**: основной файл программы, содержащий логику выполнения анализа данных.
-- **untitled2.ui, untitled1.ui, untitled.ui**: файлы графического интерфейса, реализованные в формате Qt Designer. Они предоставляют элементы управления и визуализации.
+- **[main.exe](https://github.com/C1sq/PyMi/tree/master/dist/main.exe)**: Исполняемый файл программы
+- **[main.py](https://github.com/C1sq/PyMi/tree/master/main.py)**: основной файл программы, содержащий логику выполнения анализа данных.
+- **[untitled.ui](https://github.com/C1sq/PyMi/tree/master/web_ui/untitled.ui)**, **[untitled1.ui](https://github.com/C1sq/PyMi/tree/master/web_ui/untitled1.ui)**, **[untitled2.ui](https://github.com/C1sq/PyMi/tree/master/web_ui/untitled2.ui)**: файлы графического интерфейса, реализованные в формате Qt Designer. Они предоставляют элементы управления и визуализации.
 
 ### Основные возможности
 - Импорт данных для анализа.
